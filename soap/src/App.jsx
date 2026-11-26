@@ -51,7 +51,7 @@ export default function App() {
           wasmBinaryPath: "/wasm/vision_wasm_internal.wasm",
         };
 
-        const modelUrl = "https://googleapis.com";
+        const modelUrl = "/hand_landmarker.task";
 
         let landmarker;
         try {
