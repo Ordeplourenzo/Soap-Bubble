@@ -50,17 +50,29 @@ export default function App() {
         const vision = await FilesetResolver.forVisionTasks(
           "https://jsdelivr.net",
         );
-        const landmarker = await HandLandmarker.createFromOptions(vision, {
-          baseOptions: {
-            modelAssetPath: "https://googleapis.com",
-            delegate: "GPU",
-          },
-          runningMode: "VIDEO",
-          numHands: 2,
-          minHandDetectionConfidence: 0.5,
-          minHandPresenceConfidence: 0.5,
-          minTrackingConfidence: 0.5,
-        });
+
+        const modelUrl = "https://jsdelivr.net";
+
+        let landmarker;
+        try {
+          landmarker = await HandLandmarker.createFromOptions(vision, {
+            baseOptions: {
+              modelAssetPath: modelUrl,
+              delegate: "GPU",
+            },
+            runningMode: "VIDEO",
+            numHands: 2,
+          });
+        } catch {
+          landmarker = await HandLandmarker.createFromOptions(vision, {
+            baseOptions: {
+              modelAssetPath: modelUrl,
+              delegate: "CPU",
+            },
+            runningMode: "VIDEO",
+            numHands: 2,
+          });
+        }
 
         if (!ativo) {
           landmarker.close();
@@ -70,7 +82,8 @@ export default function App() {
         setEstado("pronto");
       } catch (err) {
         if (ativo) {
-          setErroMsg("Erro ao carregar o modelo: " + err.message);
+          const detalhe = err?.message || String(err);
+          setErroMsg("Erro ao carregar o modelo: " + detalhe);
           setEstado("erro");
         }
       }
