@@ -41,17 +41,17 @@ export default function App() {
     audioCtx: null,
     animId: null,
   });
-
   useEffect(() => {
     let ativo = true;
 
     async function carregarModelo() {
       try {
-        const vision = await FilesetResolver.forVisionTasks(
-          "https://jsdelivr.net",
-        );
+        const vision = {
+          wasmLoaderPath: "/wasm/vision_wasm_internal.js",
+          wasmBinaryPath: "/wasm/vision_wasm_internal.wasm",
+        };
 
-        const modelUrl = "https://jsdelivr.net";
+        const modelUrl = "https://googleapis.com";
 
         let landmarker;
         try {
